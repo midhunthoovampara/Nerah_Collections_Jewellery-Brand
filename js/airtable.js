@@ -47,6 +47,10 @@ function isLocalDevelopment() {
     return ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) || window.location.hostname.endsWith('.local');
 }
 
+function canUseDirectAirtable() {
+    return Boolean(AIRTABLE_CONFIG.API_TOKEN && AIRTABLE_CONFIG.API_TOKEN !== 'MISSING_TOKEN');
+}
+
 /**
  * Airtable API utility for Nerah Collections.
  * Keeps the pages focused on rendering while this file handles data fetching,
@@ -69,11 +73,11 @@ const AirtableService = {
                 const proxyText = await proxyResponse.text();
                 const proxyMessage = proxyText || `Airtable proxy returned ${proxyResponse.status}`;
                 console.warn(proxyMessage);
-                if (!isLocalDevelopment()) {
+                if (!isLocalDevelopment() || !canUseDirectAirtable()) {
                     throw new Error(proxyMessage);
                 }
             } catch (error) {
-                if (!isLocalDevelopment()) {
+                if (!isLocalDevelopment() || !canUseDirectAirtable()) {
                     throw error;
                 }
                 console.warn('Airtable proxy request failed, falling back to direct Airtable fetch:', error);

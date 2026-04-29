@@ -1,6 +1,3 @@
-# Airtable Credentials (DO NOT COMMIT)
-/js/config.js
-
 # OS files
 .DS_Store
 Thumbs.db
