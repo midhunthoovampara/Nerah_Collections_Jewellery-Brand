@@ -45,7 +45,7 @@ exports.handler = async (event) => {
     const query = new URLSearchParams(event.queryStringParameters || {});
     const path = query.get('path');
 
-    if (!path || !path.startsWith('/v0/')) {
+    if (!path || !path.startsWith('/')) {
         return json(400, { error: 'Missing or invalid path parameter.' });
     }
 

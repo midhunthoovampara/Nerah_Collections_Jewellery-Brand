@@ -37,9 +37,14 @@ function buildProxyUrl(path = '', query = {}) {
     if (typeof window === 'undefined' || !window.location?.origin) return null;
 
     const url = new URL(AIRTABLE_PROXY_ENDPOINT, window.location.origin);
-    url.searchParams.set('path', `/v0/${AIRTABLE_CONFIG.BASE_ID}/${encodeURIComponent(AIRTABLE_CONFIG.TABLE_NAME)}${path}`);
+    url.searchParams.set('path', `/${AIRTABLE_CONFIG.BASE_ID}/${encodeURIComponent(AIRTABLE_CONFIG.TABLE_NAME)}${path}`);
     appendQueryParams(url.searchParams, query);
     return url.toString();
+}
+
+function isLocalDevelopment() {
+    if (typeof window === 'undefined' || !window.location) return false;
+    return ['localhost', '127.0.0.1', '::1'].includes(window.location.hostname) || window.location.hostname.endsWith('.local');
 }
 
 /**
@@ -61,8 +66,16 @@ const AirtableService = {
                 if (proxyResponse.ok) {
                     return proxyResponse.json();
                 }
-                console.warn('Airtable proxy returned an error response:', proxyResponse.status);
+                const proxyText = await proxyResponse.text();
+                const proxyMessage = proxyText || `Airtable proxy returned ${proxyResponse.status}`;
+                console.warn(proxyMessage);
+                if (!isLocalDevelopment()) {
+                    throw new Error(proxyMessage);
+                }
             } catch (error) {
+                if (!isLocalDevelopment()) {
+                    throw error;
+                }
                 console.warn('Airtable proxy request failed, falling back to direct Airtable fetch:', error);
             }
         }
