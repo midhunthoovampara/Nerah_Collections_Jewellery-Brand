@@ -12,5 +12,13 @@
   "type": "commonjs",
   "devDependencies": {
     "tailwindcss": "^4.2.4"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/midhunthoovampara/Nerah_Collections_Jewellery-Brand.git"
+  },
+  "bugs": {
+    "url": "https://github.com/midhunthoovampara/Nerah_Collections_Jewellery-Brand/issues"
+  },
+  "homepage": "https://github.com/midhunthoovampara/Nerah_Collections_Jewellery-Brand#readme"
 }

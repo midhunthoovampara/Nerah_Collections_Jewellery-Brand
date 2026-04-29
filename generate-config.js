@@ -28,6 +28,16 @@ if (!fs.existsSync(configDir)) {
     fs.mkdirSync(configDir);
 }
 
+// Check if variables exist
+if (!process.env.AIRTABLE_TOKEN) {
+    console.warn('⚠️ WARNING: AIRTABLE_TOKEN is missing in environment variables.');
+}
+if (!process.env.AIRTABLE_BASE_ID) {
+    console.warn('⚠️ WARNING: AIRTABLE_BASE_ID is missing in environment variables.');
+}
+
 // Write the file
 fs.writeFileSync(configPath, configContent);
-console.log('✅ js/config.js has been generated successfully via Environment Variables.');
+console.log('✅ js/config.js has been generated successfully.');
+console.log(`- Token status: ${process.env.AIRTABLE_TOKEN ? 'Detected' : 'MISSING'}`);
+console.log(`- Base ID status: ${process.env.AIRTABLE_BASE_ID ? 'Detected' : 'MISSING'}`);
