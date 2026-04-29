@@ -1,6 +1,7 @@
 import AIRTABLE_CONFIG from './config.js';
 
 const AIRTABLE_API_BASE = 'https://api.airtable.com/v0';
+const AIRTABLE_PROXY_ENDPOINT = '/api/airtable';
 
 function escapeFormulaValue(value) {
     return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
@@ -10,6 +11,37 @@ function isAirtableRecordId(identifier) {
     return /^rec[a-zA-Z0-9]+$/.test(String(identifier));
 }
 
+function appendQueryParams(search, query = {}) {
+    for (const [key, value] of Object.entries(query)) {
+        if (value === undefined || value === null || value === '') continue;
+
+        if (key === 'sort' && Array.isArray(value)) {
+            value.forEach((entry, index) => {
+                if (!entry) return;
+                search.append(`sort[${index}][field]`, entry.field);
+                search.append(`sort[${index}][direction]`, entry.direction || 'asc');
+            });
+            continue;
+        }
+
+        search.append(key, String(value));
+    }
+}
+
+function buildAirtablePath(path = '') {
+    const { BASE_ID, TABLE_NAME } = AIRTABLE_CONFIG;
+    return `${AIRTABLE_API_BASE}/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}${path}`;
+}
+
+function buildProxyUrl(path = '', query = {}) {
+    if (typeof window === 'undefined' || !window.location?.origin) return null;
+
+    const url = new URL(AIRTABLE_PROXY_ENDPOINT, window.location.origin);
+    url.searchParams.set('path', `/v0/${AIRTABLE_CONFIG.BASE_ID}/${encodeURIComponent(AIRTABLE_CONFIG.TABLE_NAME)}${path}`);
+    appendQueryParams(url.searchParams, query);
+    return url.toString();
+}
+
 /**
  * Airtable API utility for Nerah Collections.
  * Keeps the pages focused on rendering while this file handles data fetching,
@@ -17,26 +49,26 @@ function isAirtableRecordId(identifier) {
  */
 const AirtableService = {
     async request(path = '', query = {}) {
-        const { API_TOKEN, BASE_ID, TABLE_NAME } = AIRTABLE_CONFIG;
         const search = new URLSearchParams();
+        appendQueryParams(search, query);
+        const queryString = search.toString();
+        const pathUrl = buildAirtablePath(path);
 
-        for (const [key, value] of Object.entries(query)) {
-            if (value === undefined || value === null || value === '') continue;
-
-            if (key === 'sort' && Array.isArray(value)) {
-                value.forEach((entry, index) => {
-                    if (!entry) return;
-                    search.append(`sort[${index}][field]`, entry.field);
-                    search.append(`sort[${index}][direction]`, entry.direction || 'asc');
-                });
-                continue;
+        const proxyUrl = buildProxyUrl(path, query);
+        if (proxyUrl) {
+            try {
+                const proxyResponse = await fetch(proxyUrl, { cache: 'no-store' });
+                if (proxyResponse.ok) {
+                    return proxyResponse.json();
+                }
+                console.warn('Airtable proxy returned an error response:', proxyResponse.status);
+            } catch (error) {
+                console.warn('Airtable proxy request failed, falling back to direct Airtable fetch:', error);
             }
-
-            search.append(key, String(value));
         }
 
-        const queryString = search.toString();
-        const url = `${AIRTABLE_API_BASE}/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}${path}${queryString ? `?${queryString}` : ''}`;
+        const { API_TOKEN } = AIRTABLE_CONFIG;
+        const url = `${pathUrl}${queryString ? `?${queryString}` : ''}`;
 
         const response = await fetch(url, {
             headers: {
