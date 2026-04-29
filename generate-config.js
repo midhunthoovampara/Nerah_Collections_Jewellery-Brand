@@ -13,7 +13,7 @@ const configContent = `/**
 const AIRTABLE_CONFIG = {
     API_TOKEN: '${process.env.AIRTABLE_TOKEN || 'MISSING_TOKEN'}',
     BASE_ID: '${process.env.AIRTABLE_BASE_ID || 'MISSING_BASE_ID'}',
-    TABLE_NAME: 'Products',
+    TABLE_NAME: '${process.env.AIRTABLE_TABLE_NAME || 'Products'}',
     DEFAULT_PAGE_SIZE: 100,
 };
 

@@ -73,11 +73,11 @@ const AirtableService = {
                 const proxyText = await proxyResponse.text();
                 const proxyMessage = proxyText || `Airtable proxy returned ${proxyResponse.status}`;
                 console.warn(proxyMessage);
-                if (!isLocalDevelopment() || !canUseDirectAirtable()) {
+                if (!canUseDirectAirtable()) {
                     throw new Error(proxyMessage);
                 }
             } catch (error) {
-                if (!isLocalDevelopment() || !canUseDirectAirtable()) {
+                if (!canUseDirectAirtable()) {
                     throw error;
                 }
                 console.warn('Airtable proxy request failed, falling back to direct Airtable fetch:', error);
