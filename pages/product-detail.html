@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Name | Nerah Collections</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Montserrat:wght@200;300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandGold: '#D4AF37',
+                        brandEmerald: '#004D40',
+                        brandDark: '#1A1A1A',
+                        brandBg: '#ffffff',
+                    },
+                    fontFamily: {
+                        display: ['"Cormorant Garamond"', 'serif'],
+                        body: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #ffffff;
+            color: #2C2C2C;
+        }
+
+        .font-display {
+            font-family: 'Cormorant Garamond', serif;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #fff;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #D4AF37;
+        }
+
+        /* Lightbox Styles */
+        #lightbox {
+            display: none;
+        }
+
+        #lightbox.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Tab Styles */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .tab-link.active {
+            border-bottom-color: #D4AF37;
+            color: #2C2C2C;
+        }
+
+        /* Zoom Cursor */
+        .zoom-cursor {
+            cursor: zoom-in;
+        }
+
+        /* Product Spec Table */
+        .spec-row:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body class="antialiased">
+
+    <!-- Header (Consistent with Site) -->
+    <header class="w-full h-24 sm:h-28 md:h-32 bg-white border-b border-gray-50 sticky top-0 z-[100]">
+        <div class="container mx-auto h-full px-4 sm:px-6 flex justify-between items-center relative">
+            <div class="flex items-center">
+                <a href="all-products.html" class="hover:text-brandGold transition-all flex items-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M15 19l-7-7 7-7">
+                        </path>
+                    </svg>
+                    <span class="text-[10px] uppercase tracking-widest font-light hidden sm:inline">Back</span>
+                </a>
+            </div>
+
+            <div class="absolute left-1/2 -translate-x-1/2">
+                <a href="../index.html">
+                    <img src="../PHOTOS/nerahlogo.png" alt="Nerah Collections"
+                        class="h-16 sm:h-20 md:h-24 lg:h-28 w-auto object-contain transition-all duration-500">
+                </a>
+            </div>
+
+            <div class="flex items-center space-x-4 md:space-x-6 invisible lg:visible">
+                <a href="../index.html#about"
+                    class="text-[0.65rem] tracking-[0.3em] uppercase font-medium hover:text-brandGold transition-all">Our
+                    Story</a>
+                <a href="all-products.html"
+                    class="text-[0.65rem] tracking-[0.3em] uppercase font-medium hover:text-brandGold transition-all">Shop</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 py-8 md:py-12 lg:py-16 max-w-[1400px]">
+        <!-- Breadcrumbs -->
+        <nav class="mb-[20px]">
+            <ol class="flex items-center text-[13px] tracking-wider text-[#666666] font-light">
+                <li><a href="../index.html" class="hover:text-brandGold transition-colors">Home</a></li>
+                <li class="mx-3">/</li>
+                <li><a href="all-products.html" class="hover:text-brandGold transition-colors">Collections</a></li>
+                <li class="mx-3">/</li>
+                <li id="breadcrumb-category" class="hover:text-brandGold transition-colors cursor-pointer capitalize">
+                    Category</li>
+                <li class="mx-3">/</li>
+                <li id="breadcrumb-product" class="text-gray-900 font-medium">Product Name</li>
+            </ol>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row gap-10 md:gap-14 lg:gap-20">
+
+            <!-- 🖼️ 1. IMAGE GALLERY SECTION -->
+            <div class="w-full lg:w-[60%] flex flex-col gap-6">
+                <!-- Swiper Mobile -->
+                <div class="lg:hidden w-full gallery-mobile">
+                    <div class="swiper productSwiper">
+                        <div class="swiper-wrapper" id="mobile-gallery-wrapper">
+                            <!-- Injected by JS -->
+                        </div>
+                        <div class="swiper-pagination !-bottom-2"></div>
+                    </div>
+                </div>
+
+                <!-- Desktop Main Image -->
+                <div
+                    class="hidden lg:block w-full aspect-[4/5] bg-[#FDFBF7] border border-[#E8E8E8] overflow-hidden group rounded-[8px]">
+                    <img id="main-image" src="" alt="Product Main"
+                        class="w-full h-full object-cover zoom-cursor transition-transform duration-700 hover:scale-105"
+                        onclick="openLightbox(0)">
+                </div>
+
+                <!-- Desktop Thumbnails -->
+                <div class="hidden lg:flex flex-wrap gap-[12px]" id="thumbnail-grid">
+                    <!-- Injected by JS -->
+                </div>
+            </div>
+
+            <!-- 📋 2. PRODUCT INFORMATION SECTION -->
+            <div class="w-full lg:w-[40%] flex flex-col">
+                <h1 id="product-name"
+                    class="font-display text-[30px] sm:text-[36px] md:text-[42px] font-semibold text-[#2C2C2C] mb-[14px] tracking-[-0.5px] leading-[1.15]">
+                    Product Name</h1>
+                <div id="product-price"
+                    class="text-[24px] sm:text-[28px] md:text-[32px] text-brandGold font-medium mb-[12px]">₹0,000</div>
+
+                <div class="mb-[20px]">
+                    <span
+                        class="bg-[#FDFBF7] border border-brandGold/20 px-[12px] py-[6px] rounded-[4px] text-[11px] sm:text-[12px] uppercase tracking-widest text-brandGold font-medium inline-block">Handcrafted
+                        Piece</span>
+                </div>
+
+                <p id="product-short-desc"
+                    class="text-[14px] sm:text-[15px] md:text-[16px] text-[#555555] leading-[1.7] font-light mb-[24px]">
+                    Handcrafted to perfection, this exquisite piece defines the intersection of tradition and modern
+                    luxury.
+                    Designed for the woman who carries her elegance with ease.
+                </p>
+
+                <!-- Specifications Table -->
+                <div class="border-t border-gray-100 pt-6 space-y-[12px] mb-10 text-[13px] sm:text-[14px]">
+                    <div class="flex justify-between spec-row pb-[8px] border-b border-[#F0F0F0]">
+                        <span class="font-semibold text-[#333333] uppercase tracking-wider">Material</span>
+                        <span id="spec-material" class="text-[#666666]">18k Gold Plated</span>
+                    </div>
+                    <div class="flex justify-between spec-row pb-[8px] border-b border-[#F0F0F0]">
+                        <span class="font-semibold text-[#333333] uppercase tracking-wider">Size</span>
+                        <span id="spec-size" class="text-[#666666]">18 inches</span>
+                    </div>
+                    <div class="flex justify-between spec-row pb-[8px] border-b border-[#F0F0F0]">
+                        <span class="font-semibold text-[#333333] uppercase tracking-wider">Colors</span>
+                        <span id="spec-colors" class="text-[#666666]">Gold</span>
+                    </div>
+                </div>
+
+                <!-- 💬 3. WHATSAPP INQUIRY BUTTON -->
+                <div
+                    class="fixed bottom-0 left-0 w-full p-4 bg-white border-t border-gray-100 lg:static lg:p-0 lg:bg-transparent lg:border-none z-50">
+                    <a id="whatsapp-link" href="#" target="_blank"
+                        class="flex items-center justify-center gap-[10px] w-full lg:max-w-[400px] bg-[#25D366] text-white font-medium py-[16px] px-[32px] rounded-[6px] tracking-wide transition-all duration-300 hover:bg-[#1FAD52] hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(37,211,102,0.4)] group">
+                        <svg class="w-[20px] h-[20px]" fill="currentColor" viewBox="0 0 24 24">
+                            <path
+                                d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                        </svg>
+                        Inquire on WhatsApp
+                    </a>
+                </div>
+
+                <!-- 🔗 4. SHARE BUTTONS -->
+                <div class="mt-[16px]">
+                    <p class="text-[13px] text-[#888888] tracking-widest mb-4">Share this product:</p>
+                    <div class="flex items-center gap-[12px]">
+                        <button onclick="shareWhatsApp()"
+                            class="w-[40px] h-[40px] rounded-full border-[1.5px] border-[#25D366] text-[#25D366] flex items-center justify-center transition-all hover:bg-[#25D366] hover:text-white"
+                            title="WhatsApp">
+                            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+                            </svg>
+                        </button>
+                        <a href="https://www.instagram.com/nerah_collections_/" target="_blank"
+                            class="w-[40px] h-[40px] rounded-full border-[1.5px] border-[#E1306C] text-[#E1306C] flex items-center justify-center transition-all hover:bg-gradient-to-tr hover:from-[#f09433] hover:via-[#dc2743] hover:to-[#bc1888] hover:text-white"
+                            title="Instagram">
+                            <svg class="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
+                                <path
+                                    d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
+                            </svg>
+                        </a>
+                        <button onclick="copyToClipboard()" id="copy-btn"
+                            class="w-[40px] h-[40px] rounded-full border-[1.5px] border-gray-300 text-gray-500 flex items-center justify-center transition-all hover:border-brandGold hover:text-brandGold relative"
+                            title="Copy Link">
+                            <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+                                    d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3">
+                                </path>
+                            </svg>
+                            <span id="copy-tooltip"
+                                class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-800 text-white text-[10px] px-2 py-1 rounded opacity-0 transition-opacity">Copied!</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 📑 5. PRODUCT DETAILS TABS -->
+        <div class="mt-16 md:mt-24 border-b-[2px] border-[#E8E8E8]">
+            <div class="flex">
+                <button
+                    class="tab-link active border-b-[2px] border-transparent px-[24px] py-[12px] text-[15px] uppercase tracking-widest font-medium transition-all -mb-[2px]"
+                    data-tab="desc">Description</button>
+                <button
+                    class="tab-link border-b-[2px] border-transparent px-[24px] py-[12px] text-[15px] uppercase tracking-widest font-medium transition-all -mb-[2px]"
+                    data-tab="care">Care Instructions</button>
+            </div>
+        </div>
+
+        <div class="py-8 md:py-12">
+            <div id="desc"
+                class="tab-content active text-[15px] md:text-[16px] text-gray-500 leading-relaxed max-w-4xl">
+                <!-- Injected via JS -->
+            </div>
+            <div id="care" class="tab-content text-[15px] md:text-[16px] text-gray-500 leading-relaxed max-w-4xl">
+                <p class="mb-4">To ensure your piece remains as radiant as the day you received it, we recommend the
+                    following care:</p>
+                <ul class="list-disc pl-5 space-y-3">
+                    <li>Store separately in a soft velvet pouch to avoid scratches.</li>
+                    <li>Remove before swimming, showering, or participating in intense physical activity.</li>
+                    <li>Apply cosmetics, perfumes, and hairsprays before putting on your jewelry.</li>
+                    <li>Clean gently with a soft, lint-free cloth after each wear.</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 🎁 6. RELATED PRODUCTS SECTION -->
+        <section class="mt-16 border-t border-gray-50 pt-12 md:pt-16">
+            <div class="text-center mb-8 md:mb-12">
+                <h2 class="font-display text-3xl md:text-4xl italic text-brandDark mb-4">Complete the Look</h2>
+                <div class="w-12 h-px bg-brandGold mx-auto"></div>
+            </div>
+            <div id="related-grid" class="grid grid-cols-3 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 lg:gap-12">
+                <!-- Injected by JS -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer (Shared) -->
+    <footer class="bg-[#1a1a1a] pt-[40px] pb-[30px] px-6">
+        <div class="container mx-auto flex flex-col items-center text-white/60">
+            <ul
+                class="flex flex-col md:flex-row items-center font-body text-[10px] md:text-[11px] text-[#D4AF37] tracking-widest uppercase space-y-3 md:space-y-0 mb-5">
+                <li><a href="../index.html" class="hover:brightness-125 transition-all">Collections</a></li>
+                <li class="hidden md:block mx-3 opacity-60">•</li>
+                <li><a href="../index.html#best-sellers" class="hover:brightness-125 transition-all">Signature
+                        Pieces</a></li>
+                <li class="hidden md:block mx-3 opacity-60">•</li>
+                <li><a href="../index.html#about" class="hover:brightness-125 transition-all">Our Story</a></li>
+                <li class="hidden md:block mx-3 opacity-60">•</li>
+                <li><a href="../index.html#contact" class="hover:brightness-125 transition-all">Contact Us</a></li>
+            </ul>
+            <p class="text-[10px] tracking-wide text-gray-500 mb-2 font-light italic">"Crafting legacies in the quiet
+                sanctuary of our atelier."</p>
+            <div class="text-[9px] md:text-[10px] text-gray-600 font-body text-center tracking-wide mt-2">
+                &copy; 2024 Nerah Collections. Crafted with love.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 bg-black/95 z-[500] items-center justify-center p-6"
+        onclick="closeLightbox()">
+        <button class="absolute top-8 right-8 text-white hover:text-brandGold transition-colors"
+            onclick="closeLightbox()">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+        </button>
+        <button class="absolute left-8 text-white hover:text-brandGold transition-colors" onclick="prevImage(event)">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+        <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] object-contain shadow-2xl">
+        <button class="absolute right-8 text-white hover:text-brandGold transition-colors" onclick="nextImage(event)">
+            <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+        <div class="absolute bottom-8 text-white/60 text-[12px] tracking-[0.2em] font-medium" id="lightbox-counter">1 /
+            5</div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        // Global state for lightbox
+        let currentImageIndex = 0;
+        let productImages = [];
+
+        // UI Helpers
+        function switchImage(index) {
+            currentImageIndex = index;
+            document.getElementById('main-image').src = productImages[index];
+            const thumbs = document.getElementById('thumbnail-grid').children;
+            Array.from(thumbs).forEach((t, i) => {
+                t.classList.toggle('border-brandGold', i === index);
+                t.classList.toggle('opacity-100', i === index);
+                t.classList.toggle('border-transparent', i !== index);
+                t.classList.toggle('opacity-60', i !== index);
+            });
+        }
+
+        // Lightbox Functions
+        function openLightbox(index) {
+            currentImageIndex = index || currentImageIndex;
+            document.getElementById('lightbox').classList.add('active');
+            updateLightboxContent();
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+        function updateLightboxContent() {
+            document.getElementById('lightbox-img').src = productImages[currentImageIndex];
+            document.getElementById('lightbox-counter').innerText = `${currentImageIndex + 1} / ${productImages.length}`;
+        }
+        function nextImage(e) { e.stopPropagation(); currentImageIndex = (currentImageIndex + 1) % productImages.length; updateLightboxContent(); }
+        function prevImage(e) { e.stopPropagation(); currentImageIndex = (currentImageIndex - 1 + productImages.length) % productImages.length; updateLightboxContent(); }
+
+        // Tabs Logic
+        document.querySelectorAll('.tab-link').forEach(link => {
+            link.onclick = () => {
+                document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                link.classList.add('active');
+                document.getElementById(link.dataset.tab).classList.add('active');
+            };
+        });
+
+        // Share Utilities
+        function shareWhatsApp() {
+            const url = window.location.href;
+            window.open(`https://wa.me/?text=${encodeURIComponent('Check out this jewelry from Nerah Collections: ' + url)}`);
+        }
+        function copyToClipboard() {
+            navigator.clipboard.writeText(window.location.href);
+            const tooltip = document.getElementById('copy-tooltip');
+            tooltip.style.opacity = '1';
+            setTimeout(() => tooltip.style.opacity = '0', 2000);
+        }
+
+        // Handle Escape Key for Lightbox
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (document.getElementById('lightbox').classList.contains('active')) {
+                if (e.key === 'ArrowRight') nextImage(e);
+                if (e.key === 'ArrowLeft') prevImage(e);
+            }
+        });
+    </script>
+
+    <!-- Airtable Dynamic Loading -->
+    <script type="module">
+        import AirtableService from '../js/airtable.js';
+
+        async function initProductDetail() {
+            const params = new URLSearchParams(window.location.search);
+            const identifier = params.get('id');
+
+            if (!identifier) {
+                document.getElementById('product-name').innerText = 'Product Not Found';
+                return;
+            }
+
+            const product = await AirtableService.getProduct(identifier);
+
+            if (!product) {
+                document.getElementById('product-name').innerText = 'Product Not Found';
+                document.getElementById('product-price').innerText = '';
+                document.getElementById('product-short-desc').innerText = 'We could not find the piece you were looking for. It may have been removed or the link may be incorrect.';
+                return;
+            }
+
+            // Populate Text content
+            document.title = `${product.name} | Nerah Collections`;
+            document.getElementById('breadcrumb-category').innerText = product.category || 'Collection';
+            document.getElementById('breadcrumb-product').innerText = product.name;
+            document.getElementById('product-name').innerText = product.name;
+            document.getElementById('product-price').innerText = product.price;
+            document.getElementById('product-short-desc').innerText = product.description || '';
+            document.getElementById('desc').innerText = product.description || 'No description available.';
+            document.getElementById('spec-material').innerText = product.material || '—';
+            document.getElementById('spec-size').innerText = product.size || '—';
+            document.getElementById('spec-colors').innerText = product.colors || '—';
+
+            // Care Instructions
+            if (product.careInstructions) {
+                const careTab = document.getElementById('care');
+                careTab.innerHTML = `<p>${product.careInstructions.replace(/\n/g, '</p><p class="mt-3">')}</p>`;
+            }
+
+            // Setup Images from Airtable attachments
+            productImages = product.images.length > 0 ? product.images : [product.mainImage];
+
+            // Desktop Gallery setup
+            const mainImg = document.getElementById('main-image');
+            mainImg.src = productImages[0];
+            const thumbGrid = document.getElementById('thumbnail-grid');
+            productImages.forEach((img, i) => {
+                const thumb = document.createElement('div');
+                thumb.className = `w-20 h-20 bg-gray-100 rounded-md border-2 overflow-hidden cursor-pointer transition-all duration-300 ${i === 0 ? 'border-brandGold opacity-100' : 'border-transparent opacity-60 hover:opacity-100'}`;
+                thumb.innerHTML = `<img src="${img}" class="w-full h-full object-cover">`;
+                thumb.onclick = () => switchImage(i);
+                thumbGrid.appendChild(thumb);
+            });
+
+            // Mobile Swiper setup
+            const swiperWrapper = document.getElementById('mobile-gallery-wrapper');
+            productImages.forEach(img => {
+                swiperWrapper.innerHTML += `<div class="swiper-slide aspect-square bg-[#FDFBF7]"><img src="${img}" class="w-full h-full object-cover"></div>`;
+            });
+            new Swiper('.productSwiper', {
+                pagination: { el: '.swiper-pagination', clickable: true },
+                autoHeight: true
+            });
+
+            // WhatsApp Link Setup
+            const message = encodeURIComponent(`Hi! I'm interested in the "${product.name}" (${product.price}). Is this available?`);
+            document.getElementById('whatsapp-link').href = `https://wa.me/919072990460?text=${message}`;
+
+            // Related Products - fetch all and filter by same category
+            const allProducts = await AirtableService.getAllProducts();
+            if (allProducts) {
+                const relatedGrid = document.getElementById('related-grid');
+                const targetCategory = String(product.category || '').toLowerCase();
+                const relatedProducts = allProducts
+                    .filter(p => p.id !== product.id)
+                    .sort((a, b) => {
+                        const aMatch = String(a.category || '').toLowerCase() === targetCategory ? 0 : 1;
+                        const bMatch = String(b.category || '').toLowerCase() === targetCategory ? 0 : 1;
+                        return aMatch - bMatch;
+                    })
+                    .slice(0, 4);
+
+                if (relatedProducts.length) {
+                    relatedGrid.innerHTML = relatedProducts.map(p => `
+                        <a href="product-detail.html?id=${p.slug || p.id}" class="group block">
+                            <div class="aspect-square bg-gray-50 border border-gray-100 overflow-hidden mb-3 sm:mb-4">
+                                <img src="${p.mainImage}" alt="${p.name}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110">
+                            </div>
+                            <div class="text-center">
+                                <h3 class="font-display text-[11px] sm:text-xl italic leading-tight mb-1">${p.name}</h3>
+                                <p class="text-brandGold text-[9px] sm:text-xs tracking-widest font-bold">${p.price}</p>
+                            </div>
+                        </a>
+                    `).join('');
+                } else {
+                    relatedGrid.innerHTML = '<p class="col-span-full text-center text-sm text-gray-400 tracking-widest uppercase">More pieces coming soon</p>';
+                }
+            }
+        }
+
+        initProductDetail();
+    </script>
+</body>
+
+</html>
